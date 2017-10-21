@@ -3,6 +3,14 @@ BUMP_VERSION := $(GOPATH)/bin/bump_version
 GODOCDOC := $(GOPATH)/bin/godocdoc
 MEGACHECK := $(GOPATH)/bin/megacheck
 
+BAZEL_VERSION := 0.7.0
+BAZEL_DEB := bazel_$(BAZEL_VERSION)_amd64.deb
+
+install-travis:
+	wget "https://storage.googleapis.com/bazel-apt/pool/jdk1.8/b/bazel/$(BAZEL_DEB)"
+	sudo dpkg --force-all -i $(BAZEL_DEB)
+	sudo apt-get install moreutils -y
+
 install:
 	go get ./...
 	go install ./...
@@ -24,7 +32,10 @@ race-test:
 	bazel test --test_output=errors --features=race //...
 
 ci:
-	bazel test --noshow_progress --noshow_loading_progress --test_output=errors \
+	bazel test --noshow_progress \
+		--noshow_loading_progress \
+		--experimental_repository_cache="$$HOME/.bzrepos" \
+		--test_output=errors \
 		--features=race //...
 
 $(BUMP_VERSION):
