@@ -3,6 +3,13 @@ BUMP_VERSION := $(GOPATH)/bin/bump_version
 GODOCDOC := $(GOPATH)/bin/godocdoc
 MEGACHECK := $(GOPATH)/bin/megacheck
 
+BAZEL_VERSION := 0.7.0
+BAZEL_DEB := bazel_$(BAZEL_VERSION)_amd64.deb
+
+install-travis:
+	curl --silent --output /tmp/$(BAZEL_DEB) "https://storage.googleapis.com/bazel-apt/pool/jdk1.8/b/bazel/$(BAZEL_DEB)"
+	sudo dpkg --force-all -i /tmp/$(BAZEL_DEB)
+
 install:
 	go get ./...
 	go install ./...
