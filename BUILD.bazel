@@ -16,24 +16,24 @@ go_library(
     importpath = "github.com/kevinburke/go-types",
     visibility = ["//visibility:public"],
     deps = [
-        "@com_github_satori_go_uuid//:go_default_library",
+        "@com_github_kevinburke_go_uuid//:go_default_library",
         "@in_gopkg_mgo_v2//bson:go_default_library",
     ],
 )
 
 go_test(
     name = "go_default_test",
+    timeout = "short",
     srcs = [
         "null_time_test.go",
         "prefix_test.go",
         "tools_test.go",
         "types_test.go",
     ],
+    embed = [":go_default_library"],
     importpath = "github.com/kevinburke/go-types",
-    library = ":go_default_library",
     deps = [
-        "@com_github_satori_go_uuid//:go_default_library",
+        "@com_github_kevinburke_go_uuid//:go_default_library",
         "@in_gopkg_mgo_v2//bson:go_default_library",
     ],
-    timeout = "short",
 )

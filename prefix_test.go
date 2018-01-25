@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/satori/go.uuid"
+	"github.com/kevinburke/go.uuid"
 	"gopkg.in/mgo.v2/bson"
 )
 
@@ -57,7 +57,8 @@ var unmarshalTests = []struct {
 	{"6740b44e-13b9-475d-af06-979627e0e0d6", "", "6740b44e-13b9-475d-af06-979627e0e0d6", nil},
 	{"", "", "", errors.New("types: Could not parse \"\" as a UUID with a prefix")},
 	{"foo", "", "", errors.New("types: Could not parse \"foo\" as a UUID with a prefix")},
-	{"6740b44e-13b9-475d-af069-79627e0e0d6", "", "", errors.New("uuid: invalid string format")},
+	// this has 1 char too many
+	{"6740b44e-13b9-475d-af069-79627e0e0d6", "", "", errors.New("uuid: incorrect UUID format 6740b44e-13b9-475d-af069-79627e0e0d6")},
 }
 
 func TestUUIDUnmarshal(t *testing.T) {
