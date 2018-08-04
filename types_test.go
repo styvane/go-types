@@ -114,6 +114,22 @@ func TestBitsString(t *testing.T) {
 	if got := b.String(); got != "1.125B" {
 		t.Errorf("9 bits should be 1.125B, got %q", got)
 	}
+	b = 9 * Byte
+	if got := b.String(); got != "9B" {
+		t.Errorf("9 bytes should be 9B, got %q", got)
+	}
+	b = 20 * Byte
+	if got := b.String(); got != "20B" {
+		t.Errorf("20 bytes should be 20B, got %q", got)
+	}
+	b = 999 * Byte
+	if got := b.String(); got != "999B" {
+		t.Errorf("999 bytes should be 999B, got %q", got)
+	}
+	b = 999*Byte + 3*Bit
+	if got := b.String(); got != "999.375B" {
+		t.Errorf("999 bytes and 3 bits should be 999.375B, got %q", got)
+	}
 	b = 7380*Kilobyte + 871*Byte
 	if got := b.String(); got != "7.38MB" {
 		t.Errorf("25015kB should be 25.015MB, got %q", got)
