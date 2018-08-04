@@ -59,7 +59,7 @@ func (ns NullString) Value() (driver.Value, error) {
 	return ns.String, nil
 }
 
-var errLeadingInt = errors.New("time: bad [0-9]*") // never printed
+var errLeadingInt = errors.New("types: bad [0-9]*") // never printed
 
 // leadingInt consumes the leading [0-9]* from s.
 func leadingInt(s string) (x int64, rem string, err error) {
