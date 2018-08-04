@@ -4,7 +4,6 @@ import (
 	"database/sql/driver"
 	"encoding/json"
 	"errors"
-	"strconv"
 )
 
 const Version = "0.23"
@@ -231,13 +230,12 @@ func (b Bits) String() string {
 		w -= 2
 		copy(buf[w:], "bit")
 		w = fmtInt(buf[:w], u)
-	} else if u < uint64(Kilobyte) {
-		buf[w] = 'B'
-		val := strconv.FormatFloat(float64(u)/float64(8), 'f', 3, 64)
-		w -= len(val)
-		copy(buf[w:], val)
 	} else {
 		switch {
+		case u < uint64(Kilobyte):
+			w -= 0
+			buf[w] = 'B'
+			u = (u * 1e3 / 8)
 		case u < uint64(Megabyte):
 			w -= 1
 			copy(buf[w:], "kB")
