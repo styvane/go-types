@@ -7,8 +7,8 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/kevinburke/go.uuid"
-	"gopkg.in/mgo.v2/bson"
+	uuid "github.com/kevinburke/go.uuid"
+	"go.mongodb.org/mongo-driver/bson"
 )
 
 // A PrefixUUID stores an additional prefix as part of a UUID type.
@@ -101,29 +101,29 @@ func (pu PrefixUUID) Value() (driver.Value, error) {
 	return pu.UUID.String(), nil
 }
 
-// GetBSON implements the mgo.Getter interface.
-func (pu PrefixUUID) GetBSON() (interface{}, error) {
-	return bson.Binary{
-		Kind: 0x03,
-		Data: pu.UUID[:],
+// UnmarshalBSON implements the bson.Unmarshaler interface.
+func (pu PrefixUUID) UnmarshalBSON() (interface{}, error) {
+	return bson.RawValue{
+		Type:  0x04,
+		Value: pu.UUID[:],
 	}, nil
 }
 
-// SetBSON implements the mgo.Setter interface.
-func (pu *PrefixUUID) SetBSON(raw bson.Raw) error {
+// MarshalBSON implements the bson.Marshaler interface.
+func (pu *PrefixUUID) MarshalBSON(raw bson.RawValue) error {
 	// first 4 bytes are int32 LE length
-	if len(raw.Data) < 4 {
+	if len(raw.Value) < 4 {
 		return fmt.Errorf("invalid BSON data: too short")
 	}
-	l := binary.LittleEndian.Uint32(raw.Data[:4])
+	l := binary.LittleEndian.Uint32(raw.Value[:4])
 	var err error
 	if l >= 32 {
 		// null terminated, so subtract 1
-		d := string(raw.Data[4 : len(raw.Data)-1])
+		d := string(raw.Value[4 : len(raw.Value)-1])
 		*pu, err = NewPrefixUUID(d)
 	} else {
 		var u uuid.UUID
-		u, err = uuid.FromBytes(raw.Data[4:])
+		u, err = uuid.FromBytes(raw.Value[4:])
 		pu.UUID = u
 	}
 	return err
