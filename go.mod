@@ -1,4 +1,4 @@
-module github.com/kevinburke/go-types
+module github.com/styvane/go-types
 
 go 1.14
 
